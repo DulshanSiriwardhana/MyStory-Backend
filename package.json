@@ -30,7 +30,6 @@
     "helmet": "^7.0.0",
     "express-validator": "^7.0.1",
     "express-rate-limit": "^6.10.0",
-    "winston": "^3.10.0",
     "express-sanitizer": "^1.0.6"
   },
   "devDependencies": {

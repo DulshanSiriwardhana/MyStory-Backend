@@ -6,10 +6,8 @@ const { mockRequest, mockResponse } = require('../../helpers/testHelpers');
 
 // Mock dependencies
 jest.mock('../../../services/jwt.service');
-jest.mock('../../../utils/logger');
 
 const jwtService = require('../../../services/jwt.service');
-const logger = require('../../../utils/logger');
 
 describe('Auth Controller', () => {
   let req, res;
@@ -32,9 +30,6 @@ describe('Auth Controller', () => {
       // Mock JWT service
       jwtService.generateToken.mockReturnValue('mock-jwt-token');
 
-      // Mock logger
-      logger.info.mockImplementation(() => {});
-
       await authController.register(req, res);
 
       expect(res.status).toHaveBeenCalledWith(201);
@@ -49,9 +44,6 @@ describe('Auth Controller', () => {
 
       expect(jwtService.generateToken).toHaveBeenCalledWith(
         expect.objectContaining({ userId: expect.any(String) })
-      );
-      expect(logger.info).toHaveBeenCalledWith(
-        `New user registered: ${userData.email}`
       );
 
       // Verify user was created in database
@@ -104,8 +96,6 @@ describe('Auth Controller', () => {
         message: 'Failed to register user',
         error: 'Database error'
       });
-
-      expect(logger.error).toHaveBeenCalledWith('Register error:', expect.any(Error));
       
       // Restore original constructor
       User = originalUser;
@@ -129,9 +119,6 @@ describe('Auth Controller', () => {
       // Mock JWT service
       jwtService.generateToken.mockReturnValue('mock-jwt-token');
 
-      // Mock logger
-      logger.info.mockImplementation(() => {});
-
       await authController.login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(200);
@@ -146,9 +133,6 @@ describe('Auth Controller', () => {
 
       expect(jwtService.generateToken).toHaveBeenCalledWith(
         expect.objectContaining({ userId: testUser._id.toString() })
-      );
-      expect(logger.info).toHaveBeenCalledWith(
-        `User logged in: ${testUser.email}`
       );
     });
 
@@ -209,8 +193,6 @@ describe('Auth Controller', () => {
         message: 'Failed to login user',
         error: 'Database error'
       });
-
-      expect(logger.error).toHaveBeenCalledWith('Login error:', expect.any(Error));
       
       // Restore original method
       User.findOne = originalFindOne;
@@ -255,8 +237,6 @@ describe('Auth Controller', () => {
         message: 'Failed to get current user',
         error: 'Response error'
       });
-
-      expect(logger.error).toHaveBeenCalledWith('Get current user error:', expect.any(Error));
     });
   });
 }); 

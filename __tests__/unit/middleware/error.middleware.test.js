@@ -1,10 +1,6 @@
 const errorMiddleware = require('../../../middleware/error.middleware');
 const { mockRequest, mockResponse } = require('../../helpers/testHelpers');
 
-// Mock logger
-jest.mock('../../../utils/logger');
-const logger = require('../../../utils/logger');
-
 describe('Error Middleware', () => {
   let req, res, next;
 

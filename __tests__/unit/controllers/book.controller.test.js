@@ -6,10 +6,8 @@ const { mockRequest, mockResponse } = require('../../helpers/testHelpers');
 
 // Mock dependencies
 jest.mock('../../../services/encryption.service');
-jest.mock('../../../utils/logger');
 
 const encryptionService = require('../../../services/encryption.service');
-const logger = require('../../../utils/logger');
 
 describe('Book Controller', () => {
   let req, res, testUser, testBook;
@@ -90,8 +88,6 @@ describe('Book Controller', () => {
         error: 'Database error'
       });
 
-      expect(logger.error).toHaveBeenCalledWith('Get books error:', expect.any(Error));
-      
       // Restore original method
       Book.find = originalFind;
     });
@@ -105,9 +101,6 @@ describe('Book Controller', () => {
       };
 
       req.body = bookData;
-
-      // Mock logger
-      logger.info.mockImplementation(() => {});
 
       await bookController.createBook(req, res);
 
@@ -126,10 +119,6 @@ describe('Book Controller', () => {
       const savedBook = await Book.findOne({ title: bookData.title });
       expect(savedBook).toBeDefined();
       expect(savedBook.title).toBe(bookData.title);
-
-      expect(logger.info).toHaveBeenCalledWith(
-        `New book created: ${bookData.title} by user ${testUser._id}`
-      );
     });
 
     it('should create book without description', async () => {
@@ -166,8 +155,6 @@ describe('Book Controller', () => {
         error: 'Database error'
       });
 
-      expect(logger.error).toHaveBeenCalledWith('Create book error:', expect.any(Error));
-      
       // Restore original constructor
       Book = originalBook;
     });
@@ -292,11 +279,6 @@ describe('Book Controller', () => {
           ])
         }
       });
-
-      expect(logger.error).toHaveBeenCalledWith(
-        'Failed to decrypt story for section',
-        expect.any(Error)
-      );
     });
 
     it('should handle getBookSections errors', async () => {
@@ -317,8 +299,6 @@ describe('Book Controller', () => {
         error: 'Database error'
       });
 
-      expect(logger.error).toHaveBeenCalledWith('Get book sections error:', expect.any(Error));
-      
       // Restore original method
       Book.findOne = originalFindOne;
     });
@@ -336,9 +316,6 @@ describe('Book Controller', () => {
 
       // Mock encryption service
       encryptionService.encrypt.mockReturnValue('encrypted-story-content');
-
-      // Mock logger
-      logger.info.mockImplementation(() => {});
 
       await bookController.addSection(req, res);
 
@@ -361,9 +338,6 @@ describe('Book Controller', () => {
       expect(savedSection.story).not.toBe(sectionData.story); // Should be encrypted in DB
 
       expect(encryptionService.encrypt).toHaveBeenCalledWith(sectionData.story);
-      expect(logger.info).toHaveBeenCalledWith(
-        `New section added to book ${testBook._id}: ${sectionData.title}`
-      );
     });
 
     it('should assign correct order number for new section', async () => {
@@ -464,8 +438,6 @@ describe('Book Controller', () => {
         error: 'Database error'
       });
 
-      expect(logger.error).toHaveBeenCalledWith('Add section error:', expect.any(Error));
-      
       // Restore original constructor
       Section = originalSection;
     });
