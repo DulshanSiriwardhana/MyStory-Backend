@@ -1,6 +1,5 @@
 const jwtService = require('../services/jwt.service');
 const User = require('../models/user.model');
-// const logger = require('../utils/logger');
 
 const authenticateToken = async (req, res, next) => {
   try {
@@ -28,7 +27,6 @@ const authenticateToken = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    // logger.error('Authentication error:', error);
     return res.status(401).json({
       success: false,
       message: 'Invalid or expired token'

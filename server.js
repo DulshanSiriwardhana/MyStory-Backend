@@ -5,7 +5,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const expressSanitizer = require('express-sanitizer');
 const rateLimit = require('express-rate-limit');
-const logger = require('./utils/logger');
 const errorMiddleware = require('./middleware/error.middleware');
 
 // Import routes
