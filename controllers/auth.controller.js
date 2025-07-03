@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 const jwtService = require('../services/jwt.service');
-const logger = require('../utils/logger');
+// const logger = require('../utils/logger');
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -29,7 +29,7 @@ const register = async (req, res) => {
     // Generate JWT token
     const token = jwtService.generateToken(user._id);
 
-    logger.info(`New user registered: ${email}`);
+    // logger.info(`New user registered: ${email}`);
 
     res.status(201).json({
       success: true,
@@ -40,7 +40,7 @@ const register = async (req, res) => {
       }
     });
   } catch (error) {
-    logger.error('Registration error:', error);
+    // logger.error('Registration error:', error);
     res.status(500).json({
       success: false,
       message: 'Registration failed',
@@ -77,7 +77,7 @@ const login = async (req, res) => {
     // Generate JWT token
     const token = jwtService.generateToken(user._id);
 
-    logger.info(`User logged in: ${email}`);
+    // logger.info(`User logged in: ${email}`);
 
     res.json({
       success: true,
@@ -88,7 +88,7 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-    logger.error('Login error:', error);
+    // logger.error('Login error:', error);
     res.status(500).json({
       success: false,
       message: 'Login failed',
@@ -109,7 +109,7 @@ const getCurrentUser = async (req, res) => {
       }
     });
   } catch (error) {
-    logger.error('Get current user error:', error);
+    // logger.error('Get current user error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to get user details',

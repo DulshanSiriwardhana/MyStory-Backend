@@ -1,7 +1,6 @@
 const Book = require('../models/book.model');
 const Section = require('../models/section.model');
 const encryptionService = require('../services/encryption.service');
-const logger = require('../utils/logger');
 
 // @desc    Get all books for authenticated user
 // @route   GET /api/books
@@ -17,7 +16,6 @@ const getBooks = async (req, res) => {
       data: books
     });
   } catch (error) {
-    logger.error('Get books error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch books',
@@ -46,7 +44,6 @@ const getBook = async (req, res) => {
       data: book
     });
   } catch (error) {
-    logger.error('Get book error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch book',
@@ -70,15 +67,12 @@ const createBook = async (req, res) => {
 
     await book.save();
 
-    logger.info(`New book created: ${title} by user ${req.user._id}`);
-
     res.status(201).json({
       success: true,
       message: 'Book created successfully',
       data: book
     });
   } catch (error) {
-    logger.error('Create book error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to create book',
@@ -111,15 +105,12 @@ const updateBook = async (req, res) => {
 
     await book.save();
 
-    logger.info(`Book updated: ${bookId} by user ${req.user._id}`);
-
     res.json({
       success: true,
       message: 'Book updated successfully',
       data: book
     });
   } catch (error) {
-    logger.error('Update book error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update book',
@@ -150,14 +141,11 @@ const deleteBook = async (req, res) => {
     // Delete the book
     await Book.findByIdAndDelete(bookId);
 
-    logger.info(`Book deleted: ${bookId} by user ${req.user._id}`);
-
     res.json({
       success: true,
       message: 'Book and all its sections deleted successfully'
     });
   } catch (error) {
-    logger.error('Delete book error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete book',
@@ -192,7 +180,6 @@ const getBookSections = async (req, res) => {
       try {
         sectionObj.story = encryptionService.decrypt(section.story);
       } catch (error) {
-        logger.error(`Failed to decrypt story for section ${section._id}:`, error);
         sectionObj.story = '[Encryption Error]';
       }
       return sectionObj;
@@ -207,7 +194,6 @@ const getBookSections = async (req, res) => {
       }
     });
   } catch (error) {
-    logger.error('Get book sections error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch book sections',
@@ -246,7 +232,6 @@ const getSection = async (req, res) => {
     try {
       sectionResponse.story = encryptionService.decrypt(section.story);
     } catch (error) {
-      logger.error(`Failed to decrypt story for section ${sectionId}:`, error);
       sectionResponse.story = '[Encryption Error]';
     }
 
@@ -255,7 +240,6 @@ const getSection = async (req, res) => {
       data: sectionResponse
     });
   } catch (error) {
-    logger.error('Get section error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch section',
@@ -298,8 +282,6 @@ const addSection = async (req, res) => {
 
     await section.save();
 
-    logger.info(`New section added to book ${bookId}: ${title}`);
-
     // Return the section with decrypted story for immediate use
     const sectionResponse = section.toObject();
     sectionResponse.story = story; // Return original story, not encrypted
@@ -310,7 +292,6 @@ const addSection = async (req, res) => {
       data: sectionResponse
     });
   } catch (error) {
-    logger.error('Add section error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to add section',
@@ -354,8 +335,6 @@ const updateSection = async (req, res) => {
 
     await section.save();
 
-    logger.info(`Section updated: ${sectionId} in book ${bookId}`);
-
     // Return the section with decrypted story
     const sectionResponse = section.toObject();
     if (story !== undefined) {
@@ -374,7 +353,6 @@ const updateSection = async (req, res) => {
       data: sectionResponse
     });
   } catch (error) {
-    logger.error('Update section error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update section',
@@ -411,14 +389,11 @@ const deleteSection = async (req, res) => {
     // Delete the section
     await Section.findByIdAndDelete(sectionId);
 
-    logger.info(`Section deleted: ${sectionId} from book ${bookId}`);
-
     res.json({
       success: true,
       message: 'Section deleted successfully'
     });
   } catch (error) {
-    logger.error('Delete section error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete section',

@@ -30,13 +30,13 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(expressSanitizer());
 
 // Request logging middleware
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url}`, {
-    ip: req.ip,
-    userAgent: req.get('User-Agent')
-  });
-  next();
-});
+// app.use((req, res, next) => {
+//   logger.info(`${req.method} ${req.url}`, {
+//     ip: req.ip,
+//     userAgent: req.get('User-Agent')
+//   });
+//   next();
+// });
 
 // Rate limiting for auth routes
 const authLimiter = rateLimit({
@@ -80,9 +80,9 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    logger.info(`MongoDB Connected: ${conn.connection.host}`);
+    // logger.info(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    logger.error('MongoDB connection error:', error);
+    // logger.error('MongoDB connection error:', error);
     process.exit(1);
   }
 };
@@ -93,14 +93,14 @@ if (process.env.NODE_ENV !== 'test') {
   
   const PORT = process.env.PORT || 3000;
   const server = app.listen(PORT, () => {
-    logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+    // logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
   });
 
   // Graceful shutdown
   process.on('SIGTERM', () => {
-    logger.info('SIGTERM received, shutting down gracefully');
+    // logger.info('SIGTERM received, shutting down gracefully');
     server.close(() => {
-      logger.info('Process terminated');
+      // logger.info('Process terminated');
       mongoose.connection.close();
     });
   });
