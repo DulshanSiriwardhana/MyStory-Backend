@@ -17,7 +17,7 @@ class EncryptionService {
 
   encrypt(text) {
     try {
-      const cipher = crypto.createCipher(this.algorithm, this.secretKey);
+      const cipher = crypto.createCipheriv(this.algorithm, Buffer.from(this.secretKey), Buffer.from(this.iv));
       let encrypted = cipher.update(text, 'utf8', 'hex');
       encrypted += cipher.final('hex');
       return encrypted;
@@ -28,7 +28,7 @@ class EncryptionService {
 
   decrypt(encryptedText) {
     try {
-      const decipher = crypto.createDecipher(this.algorithm, this.secretKey);
+      const decipher = crypto.createDecipheriv(this.algorithm, Buffer.from(this.secretKey), Buffer.from(this.iv));
       let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
       decrypted += decipher.final('utf8');
       return decrypted;
